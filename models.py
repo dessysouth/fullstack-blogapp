@@ -1,6 +1,11 @@
-from . import db
+from flask import Flask
 from flask_login import UserMixin
 from sqlalchemy.sql import func
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///blog.db"
+db = SQLAlchemy(app)
 
 
 class User(db.Model, UserMixin):
@@ -41,3 +46,7 @@ class Like(db.Model):
         'user.id', ondelete="CASCADE"), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey(
         'post.id', ondelete="CASCADE"), nullable=False)
+    
+
+with app.app_context():
+    db.create_all()
